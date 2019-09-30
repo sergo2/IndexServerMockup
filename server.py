@@ -16,14 +16,16 @@ class S(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        logging.info("GET request,\nPath: %s\n", str(self.path))
         self._set_response()
         # to do: set server state from HTTP request
         indexserver_response = form_status_response(index_server_state)
         self.wfile.write(indexserver_response.encode('utf-8'))
 
     def do_PUT(self):
-        logging.info("PUT request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+        put_data = self.rfile.read(content_length) # <--- Gets the data itself
+        logging.info("PUT request,\nPath: %s\nBody:\n%s\n", str(self.path), put_data.decode('utf-8'))
         self._set_response()
         indexserver_response = form_version_response(save_index_error, save_index_error_code, save_index_error_msg)
         self.wfile.write(indexserver_response.encode('utf-8'))

@@ -17,17 +17,3 @@ def form_version_response(save_index_error, error_code, msg):
         data_dict['error_list'] = [err_dict]
     data_json = json.dumps(data_dict)
     return(data_json)
-
-print(form_version_response(True, -5, 'ffff'))
-
-#{
-  #"data": {    
-  #},
-  #"error_list": [
-    #{
-      #"category": 1,
-      #"code": 1,
-      #"message": "c250"
-   #}
-  #]
-#}
