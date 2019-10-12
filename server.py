@@ -29,6 +29,7 @@ class S(BaseHTTPRequestHandler):
         self._set_response()
         indexserver_response = form_version_response(save_index_error, save_index_error_code, save_index_error_msg)
         self.wfile.write(indexserver_response.encode('utf-8'))
+        dump_json(put_data)
         
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
