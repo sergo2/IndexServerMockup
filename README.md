@@ -8,7 +8,7 @@
 
 Запуск приложения
 =============
-$PYTHON_PATH/python server.py <comp_receiver_state> <comp_receiver_state>
+$PYTHON_PATH/python server.py <composition_receiver_state> <realtime_receiver_state>
 
 Работа приложения
 =============

@@ -67,4 +67,4 @@ if __name__ == '__main__':
     elif len(argv) == 1:
         run()
     else:
-        print('Usage: server.py <comp_receiver_state> <comp_receiver_state>\n       server.py')
+        print('Usage: server.py <composition_receiver_state> <realtime_receiver_state>\n       server.py')
