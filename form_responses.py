@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import time
-import pprint
 
 def form_status_response(return_state, req_type):
     data_dict = {}
