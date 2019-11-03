@@ -9,4 +9,4 @@ save_index_error = True
 save_index_error_code = -900
 save_index_error_msg = ' Hello from Index Server'
 
-known_indices = []
+json_dir = '.'

@@ -1,12 +1,25 @@
 # -*- coding: utf-8 -*-
 import json
 import time
+import os
+import codecs
+from config import * 
 
 def index_version(get_param_dict):
     index_id = get_param_dict['indexid'][0]
     index_version = get_param_dict['version'][0]
-    
-    return(index_id)
+    file_list = []
+    for file in os.listdir(json_dir):
+        if file.startswith(index_id + "." + index_version) and file.endswith(".json"):
+            file_list.append(file)
+    if len(file_list) > 0:
+        file_list.sort(reverse=True)
+        f = codecs.open(file_list[0], "r", "utf-8")    
+        json_str = f.read()
+        f.close
+        return(json_str)
+    else:
+        return("No json files with indexid=" + index_id + " and version=" + index_version)
     
 def form_status_response(return_state, req_type):
     data_dict = {}
