@@ -2,6 +2,12 @@
 import json
 import time
 
+def index_version(get_param_dict):
+    index_id = get_param_dict['indexid'][0]
+    index_version = get_param_dict['version'][0]
+    
+    return(index_id)
+    
 def form_status_response(return_state, req_type):
     data_dict = {}
     data_dict['data'] = {}

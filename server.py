@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 import logging
 from config import * 
 from form_responses import * 
@@ -11,15 +12,26 @@ class S(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        logging.info("GET request,\nPath: %s\n", str(self.path))
-        self._set_response()
-        if str(self.path) == receiver_url + "get_state":
+        url = str(self.path)
+        logging.info("GET request,\nURL: %s\n", url)
+        parsed_url = urlparse(url)
+        path = parsed_url.path
+
+        if path == receiver_url + "get_state":
             return_state = publisher_state
             req_type = 'realtime'
+        elif path == comp_state_url + "get_index":
+            get_param_dict = parse_qs(parsed_url.query)          
+            req_type = 'get_index'
         else:
             return_state = comp_receiver_state
             req_type = 'composition'
-        indexserver_response = form_status_response(return_state, req_type)
+            
+        self._set_response()
+        if req_type == 'get_index':
+            indexserver_response = index_version(get_param_dict)
+        else:   
+            indexserver_response = form_status_response(return_state, req_type)
         self.wfile.write(indexserver_response.encode('utf-8'))
 
     def do_PUT(self):
