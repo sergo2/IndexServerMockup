@@ -40,7 +40,7 @@ class S(BaseHTTPRequestHandler):
         body_str = put_data.decode('utf-8')
         logging.info("PUT request,\nPath: %s\nBody:\n%s\n", str(self.path), put_data.decode('utf-8'))
         body_dict = json.loads(body_str)
-        index_code = body_dict['data']['composition']['code']        
+        index_code = body_dict['data']['composition']['indexid']        
         logging.info(index_code)
         self._set_response()
         indexserver_response = form_composition_response(save_index_error, save_index_error_code, save_index_error_msg)
