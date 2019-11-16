@@ -5,9 +5,10 @@ import os
 import codecs
 from config import * 
 
-def index_version(get_param_dict):
+def form_index_version(get_param_dict):
     index_id = get_param_dict['indexid'][0]
     index_version = get_param_dict['version'][0]
+    # find an index json file with the largest version
     file_list = []
     for file in os.listdir(json_dir):
         if file.startswith(index_id + "." + index_version) and file.endswith(".json"):
@@ -19,7 +20,8 @@ def index_version(get_param_dict):
         f.close
         return(json_str)
     else:
-        return("No json files with indexid=" + index_id + " and version=" + index_version)
+        msg = "No json files with indexid=" + index_id + " and version=" + index_version
+        return form_composition_response(True, -102, msg)
     
 def form_status_response(return_state, req_type):
     data_dict = {}
@@ -35,9 +37,10 @@ def form_status_response(return_state, req_type):
 def form_composition_response(save_index_error, error_code, msg):
     data_dict = {}
     data_dict['data'] = {}
+    err_list = []
     if save_index_error:
-        err_dict = {'category': -1, 'code': error_code, 'message': msg}
-        data_dict['error_list'] = [err_dict]
+        err_list.append({'category': -1, 'code': error_code, 'message': msg})
+    data_dict['error_list'] = err_list
     data_json = json.dumps(data_dict)
     return(data_json)
 
