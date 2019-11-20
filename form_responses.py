@@ -16,8 +16,11 @@ def form_index_version(get_param_dict):
     if len(file_list) > 0:
         file_list.sort(reverse=True)
         f = codecs.open(file_list[0], "r", "utf-8")    
-        json_str = f.read()
+        # json_str = f.read()
+        json_decoded = json.load(f)
         f.close
+        json_decoded['error_list'] = []
+        json_str = json.dumps(json_decoded)
         return(json_str)
     else:
         msg = "No json files with indexid=" + index_id + " and version=" + index_version
