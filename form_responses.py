@@ -37,12 +37,18 @@ def form_status_response(return_state, req_type):
     data_json = json.dumps(data_dict)
     return(data_json)
 
-def form_composition_response(save_index_error, error_code, msg):
+def form_composition_response(req_error=None, error_code=None, error_msg=None, version_status = None):
     data_dict = {}
     data_dict['data'] = {}
     err_list = []
-    if save_index_error:
-        err_list.append({'category': -1, 'code': error_code, 'message': msg})
+    if version_status == 'P' and plan_error:
+        err_list.append({'category': plan_error_category, 'code': plan_error_code, 'message': plan_error_msg})
+    if version_status == 'A' and activate_error:
+        err_list.append({'category': activate_error_category, 'code': activate_error_code, 'message': activate_error_msg})
+    if version_status == 'P' and plan_error:
+        err_list.append({'category': plan_error_category, 'code': plan_error_code, 'message': plan_error_msg})
+    if version_status == None:
+        err_list.append({'category': 1, 'code': error_code, 'message': error_msg})
     data_dict['error_list'] = err_list
     data_json = json.dumps(data_dict)
     return(data_json)

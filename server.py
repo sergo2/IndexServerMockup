@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 import logging
@@ -37,13 +38,15 @@ class S(BaseHTTPRequestHandler):
     def do_PUT(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         put_data = self.rfile.read(content_length) # <--- Gets the data itself
+        print(put_data)
         body_str = put_data.decode('utf-8')
         logging.info("PUT request,\nPath: %s\nBody:\n%s\n", str(self.path), put_data.decode('utf-8'))
         body_dict = json.loads(body_str)
-        index_code = body_dict['data']['composition']['indexid']        
+        index_code = body_dict['data']['composition']['indexid']
+        version_status = body_dict['data']['composition']['version_status']       
         logging.info(index_code)
         self._set_response()
-        indexserver_response = form_composition_response(save_index_error, save_index_error_code, save_index_error_msg)
+        indexserver_response = form_composition_response(version_status = version_status)
         self.wfile.write(indexserver_response.encode('utf-8'))
         dump_json(body_dict, index_code)
         
