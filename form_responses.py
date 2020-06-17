@@ -6,25 +6,29 @@ import codecs
 from config import * 
 
 def form_index_version(get_param_dict):
-    index_id = get_param_dict['indexid'][0]
-    index_version = get_param_dict['version'][0]
-    # find an index json file with the largest version
-    file_list = []
-    for file in os.listdir(json_dir):
-        if file.startswith(index_id + "." + index_version) and file.endswith(".json"):
-            file_list.append(file)
-    if len(file_list) > 0:
-        file_list.sort(reverse=True)
-        f = codecs.open(file_list[0], "r", "utf-8")    
-        # json_str = f.read()
-        json_decoded = json.load(f)
-        f.close
-        json_decoded['error_list'] = []
-        json_str = json.dumps(json_decoded)
-        return(json_str)
+    if get_index_error:
+        return form_composition_response(True, get_index_error_code, get_index_error_msg)
     else:
-        msg = "No json files with indexid=" + index_id + " and version=" + index_version
-        return form_composition_response(True, -102, msg)
+        index_id = get_param_dict['indexid'][0]
+        index_version = get_param_dict['version'][0]
+        # find an index json file with the largest version
+        file_list = []
+        for file in os.listdir(json_dir):
+            if file.startswith(index_id + "." + index_version) and file.endswith(".json"):
+                file_list.append(file)
+        if len(file_list) > 0:
+            file_list.sort(reverse=True)
+            index_json_file = os.path.join(json_dir,file_list[0])
+            logging.info("Serving json file: {index_json_file}")
+            f = codecs.open(index_json_file, "r", "utf-8")    
+            json_decoded = json.load(f)
+            f.close
+            json_decoded['error_list'] = []
+            json_str = json.dumps(json_decoded)
+            return(json_str)
+        else:
+            msg = "No json files with indexid=" + index_id + " and version=" + index_version
+            return form_composition_response(True, -102, msg)
     
 def form_status_response(return_state, req_type):
     data_dict = {}
@@ -56,6 +60,7 @@ def form_composition_response(req_error=None, error_code=None, error_msg=None, v
 def dump_json(body_dict, index_code):
     comp_version = body_dict['data']['composition']['version']
     json_file_name = index_code + '.' + str(comp_version) + '.' + str(int(time.time())) + '.json'
+    json_file_name = os.path.join(json_dir,json_file_name)
     
     with open(json_file_name, 'w', encoding='utf-8') as f:
         json.dump(body_dict, f, ensure_ascii=False, indent=4)

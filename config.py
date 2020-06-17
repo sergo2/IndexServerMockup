@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 comp_receiver_state = 'O'
 comp_state_url = '/composition/v1/'
 
@@ -17,4 +19,9 @@ activate_error_category = 2
 activate_error_code = -804
 activate_error_msg = 'Для фин. инструмента NL0009348242 не сформированы служебные данные в таблице SecHist на дату 2020-05-25'
 
-json_dir = '.'
+get_index_error = False
+get_index_error_category = 1
+get_index_error_code = -300
+get_index_error_msg = 'Reconciliation error'
+
+json_dir = 'json'
