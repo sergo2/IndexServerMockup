@@ -23,6 +23,9 @@ class S(BaseHTTPRequestHandler):
         elif path == comp_state_url + "get_index":
             get_param_dict = parse_qs(parsed_url.query)          
             req_type = 'get_index'
+        elif path == comp_state_url + "get_daily_values":
+            get_param_dict = parse_qs(parsed_url.query)          
+            req_type = 'get_daily_values'
         else:
             return_state = comp_receiver_state
             req_type = 'composition'
@@ -30,6 +33,8 @@ class S(BaseHTTPRequestHandler):
         self._set_response()
         if req_type == 'get_index':
             indexserver_response = form_index_version(get_param_dict)
+        elif req_type == 'get_daily_values':
+            indexserver_response = form_daily_values(get_param_dict) 
         else:   
             indexserver_response = form_status_response(return_state, req_type)
         self.wfile.write(indexserver_response.encode('utf-8'))

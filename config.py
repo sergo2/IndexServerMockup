@@ -24,4 +24,9 @@ get_index_error_category = 1
 get_index_error_code = -300
 get_index_error_msg = 'Reconciliation error'
 
+daily_values_error = False
+daily_values_error_category = 1
+daily_values_error_code = -400
+daily_values_error_msg = 'Cant form daily values'
+
 json_dir = 'json'

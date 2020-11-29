@@ -5,6 +5,73 @@ import os
 import codecs
 from config import * 
 
+def form_daily_values(get_param_dict):
+    if get_index_error:
+        return form_composition_response(True, get_index_error_code, get_index_error_msg)
+    else:
+        index_id = get_param_dict['indexid'][0]
+        trade_date = get_param_dict['tradedate'][0]
+        # find an index json file with the largest version
+        file_list = []
+        for file in os.listdir(json_dir):
+            if file.startswith(index_id + ".") and file.endswith(".json"):
+                file_list.append(file)
+        if len(file_list) > 0:
+            file_list.sort(reverse=True)
+            index_json_file = os.path.join(json_dir,file_list[0])
+            logging.info("Found json file for daily values: {index_json_file}")
+            f = codecs.open(index_json_file, "r", "utf-8")    
+            json_decoded = json.load(f)
+            f.close
+            # Fill in the result
+            data_dict = {}
+            data_dict['data'] = {}            
+            data_dict['data'] = {} 
+            data_dict['data']['index_daily_values'] = {}
+            data_dict['data']['index_daily_values']['tradedate'] = trade_date            
+            data_dict['data']['index_daily_values']['open_val'] = round(random.uniform(100,300),2)         
+            data_dict['data']['index_daily_values']['close_val'] = round(random.uniform(100,300),2)
+            data_dict['data']['index_daily_values']['min_val'] = round(random.uniform(80,100),2)
+            data_dict['data']['index_daily_values']['max_val'] = round(random.uniform(300,400),2)
+            data_dict['data']['index_daily_values']['volume_money_source'] = round(random.uniform(10000000,90000000),2)
+            data_dict['data']['index_daily_values']['volume_money'] = round(random.uniform(10000000,90000000),2)
+            data_dict['data']['index_daily_values']['volume_amount'] = round(random.uniform(10000000000,9000000000),0)
+            data_dict['data']['index_daily_values']['trade_count'] = round(random.uniform(100000,900000),0)
+            data_dict['data']['index_daily_values']['return_open'] = round(random.uniform(-2,5),2)
+            data_dict['data']['index_daily_values']['min52_val'] = round(random.uniform(50,80),2)
+            data_dict['data']['index_daily_values']['max52_val'] = round(random.uniform(400,500),2)
+            data_dict['data']['index_daily_values']['rate'] = round(random.uniform(70,80),2)            
+            data_dict['data']['index_daily_values']['min52_date'] = trade_date - round(random.uniform(1,300),0)*60*60*24 
+            data_dict['data']['index_daily_values']['max52_date'] = trade_date - round(random.uniform(1,300),0)*60*60*24         
+            # Extract instrument codes from the composition dict
+            calc_base_list = json_decoded['data']['composition']['calc_base']
+            for item in calc_base_list:
+                instrument = item['mnemo']
+                item.clear()
+                item['mnemo'] = instrument
+                item['tradedate'] = trade_date
+                item['close_price'] = round(random.uniform(100,300),2)
+                item['volume_money'] = round(random.uniform(100000,300000),2)
+                item['volume_money_source'] = round(random.uniform(100000,300000),2)
+                item['volume_amount'] = round(random.uniform(100000,300000),0)
+                item['trade_count'] = round(random.uniform(1000,30000),0)
+                item['cap_val'] = round(random.uniform(1000000,3000000),2)
+                item['cap_source'] = round(random.uniform(10000000,300000000),2)
+                item['volatility'] = round(random.uniform(0.1,0.9),2)
+                item['factor_a'] = round(random.uniform(-1,1),2)
+                item['factor_b'] = round(random.uniform(-1,1),2)
+                item['sec_influence'] = round(random.uniform(-1,1),2)
+                item['determinat'] = round(random.uniform(0,1),2)
+            data_dict['data']['index_daily_values']['calc_base_daily_values_list'] = calc_base_list
+            
+            data_dict['error_list'] = []
+            
+            json_str = json.dumps(data_dict)
+            return(json_str)
+        else:
+            msg = "No json files with indexid=" + index_id
+            return form_composition_response(True, -102, msg)
+
 def form_index_version(get_param_dict):
     if get_index_error:
         return form_composition_response(True, get_index_error_code, get_index_error_msg)
