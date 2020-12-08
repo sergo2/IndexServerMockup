@@ -44,6 +44,9 @@ def form_daily_values(get_param_dict):
             data_dict['data']['index_daily_values']['rate'] = round(random.uniform(70,80),2)            
             data_dict['data']['index_daily_values']['min52_date'] = trade_date - int(random.uniform(1,300))*60*60*24 
             data_dict['data']['index_daily_values']['max52_date'] = trade_date - int(random.uniform(1,300))*60*60*24         
+            data_dict['data']['index_daily_values']['volatility'] = round(random.uniform(0,1),2) 
+            data_dict['data']['index_daily_values']['yield_index'] = round(random.uniform(3,10),2) 
+            data_dict['data']['index_daily_values']['duration_daily'] = int(random.uniform(50,1500)) 
             # Extract instrument codes from the composition dict
             calc_base_list = json_decoded['data']['composition']['calc_base']
             for item in calc_base_list:
@@ -63,6 +66,8 @@ def form_daily_values(get_param_dict):
                 item['factor_b'] = round(random.uniform(-1,1),2)
                 item['sec_influence'] = round(random.uniform(-1,1),2)
                 item['determinat'] = round(random.uniform(0,1),2)
+                item['ytm'] = round(random.uniform(3,10),2)
+                item['duration_daily'] = int(random.uniform(50,1500))
             data_dict['data']['index_daily_values']['calc_base_daily_values_list'] = calc_base_list
             
             data_dict['error_list'] = []
